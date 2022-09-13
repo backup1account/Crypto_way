@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS cryptoapp;
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;

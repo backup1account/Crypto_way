@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+  cryptodb:
+    image: mysql:latest
+    container_name: cryptodb
+    restart: always
+    volumes:
+      - app-data:/var/lib/mysql
+      - ./init.sql:/cryptodb/init.sql
+    command: --init-file /cryptodb/init.sql
+    ports:
+      - 3307:3306
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: crypto-backend
+    volumes:
+      - ./backend:/appbackend
+    restart: always
+    ports:
+      - 8000:8000
+    depends_on:
+      - cryptodb
+    entrypoint: ["./wait.sh"]
+
+  app:
+    build:
+      context: ./backend/frontend
+      dockerfile: Dockerfile
+    container_name: crypto-app
+    volumes:
+      - ./backend/frontend:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+      - cryptodb
+    entrypoint: ["./wait_backend.sh"]
+
+volumes:
+  app-data:
