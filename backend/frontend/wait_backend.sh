@@ -5,4 +5,5 @@ while ! nc -z backend 8000; do
     sleep 3
 done
 
+# npm run build
 npm run start

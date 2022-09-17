@@ -2,4 +2,5 @@
 /backend/backend/.env
 
 /backend/backend/__pycache__
-/backend/crypto_app/__pycache__
+/backend/accounts/__pycache__
+/backend/accounts/migrations

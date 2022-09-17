@@ -5,12 +5,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './index.css';
 
 import App from './App';
-import Profile from './routes/profile';
-// import LoginUser from './login_page/login';
-// import RegisterUser from './login_page/register';
+import Settings from './routes/Settings';
 import Authorization from './login_page/Auth';
+import PageNotFound from './routes/NotFound';
 
 import reportWebVitals from './reportWebVitals';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById("root")
@@ -22,9 +22,10 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
 
         <Route path="/auth" element={<Authorization />} />
+        <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

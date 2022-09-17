@@ -11,4 +11,4 @@ RUN apk add --no-cache mariadb-connector-c-dev
 RUN apk update && apk add python3 python3-dev mariadb-dev build-base && pip3 install mysqlclient
 
 RUN apk add netcat-openbsd
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --upgrade pip && pip3 install --no-cache-dir -r requirements.txt

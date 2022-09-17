@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 
-function App() {
+
+export default function App() {
   return (
     <div className="App">
-      <Link to="/profile">Profil</Link>
-      <Link to="/ranking">Ranking</Link>
-      <Link to="/anyway">Anyway</Link>
-      <Link to="/what">what</Link>
-      <Link to="/auth">login</Link>
+      <div className="App-links">
+        <Link to="/profile">Profil</Link>
+        <Link to="/ranking">Ranking</Link>
+        <Link to="/anyway">Anyway</Link>
+        <Link to="/what">what</Link>
+        <Link to="/auth">login</Link>
+      </div>
     </div>
   );
 }
-
-export default App;
