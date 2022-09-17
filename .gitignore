@@ -4,3 +4,5 @@
 /backend/backend/__pycache__
 /backend/accounts/__pycache__
 /backend/accounts/migrations
+
+.DS_Store
