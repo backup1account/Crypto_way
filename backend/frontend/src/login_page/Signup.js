@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import axios from "axios";
 
-// DODAĆ DO NAZWY UZYTK. ZE MA BYC TYLKO ALPHANUMERIC
 
 export function SignUp() {
     const { register, handleSubmit, formState: { errors }, clearErrors, getValues } = useForm({
@@ -17,10 +15,27 @@ export function SignUp() {
 
     const onSubmit = (data) => {
         // clearErrors();
-        // console.log(data);
-        axios.post("http://localhost:8000/users/", data)
+        axios.post("http://localhost:8000/users/register/", {
+            username: data.username,
+            email: data.email,
+            password: data.password
+            })
              .then(res => console.log(res))
-             .catch(err => console.log(err));
+             .catch(err => {
+                if (err.response) {
+                    console.log({
+                        'error status': err.response.status, 
+                        'error headers': err.response.headers 
+                    });
+                } 
+                else if (err.request) {
+                    console.log(err.request);
+                }
+                else {
+                    console.log('Error message: ', err.message);
+                }
+                console.log(err.config);
+             });
     };
 
     return (
@@ -36,8 +51,12 @@ export function SignUp() {
                     },
                     maxLength: {
                         value: 50,
-                        message: "Nazwa użytkownika może mieć co wyżej 50 znaków"
+                        message: "Nazwa powinna składać się z co najwyżej 50 znaków"
                     },
+                    pattern: {
+                        value: /^[a-zA-Z0-9_]*$/,
+                        message: "Nazwa może składać się z jedynie z liter alfabetu, liczb oraz znaku _"
+                    }
                 })} placeholder="Enter your username" />
                 {errors.username && <p>{errors.username.message}</p>}
 
@@ -47,15 +66,11 @@ export function SignUp() {
                     required: {
                         value: true,
                         message: "Nie wypełniono pola"
-                    }, 
+                    },
                     pattern: {
                         value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                         message: "Wprowadzono niepoprawny email"
-                    },
-                    maxLength: {
-                        value: 150,
-                        message: "Adres email powinien mieć co najwyżej 150 znaków"
-                    },
+                    }
                 })} placeholder="Enter your email" />
                 {errors.email && <p>{errors.email.message}</p>}
 

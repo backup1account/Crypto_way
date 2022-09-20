@@ -1,10 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.forms import PasswordInput
 
 from .models import CustomUser
-from .validators import validate_password
 from django.contrib.auth import get_user_model
 
 
@@ -17,17 +16,13 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        widgets = { 'password': PasswordInput() }
+        widgets = { 'password': forms.PasswordInput() }
         fields = ('username', 'email', 'first_name')
 
 
     def __init__(self, *args, **kwargs):
-        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['first_name'].required = False
-        self.fields['password1'].validators = [validate_password]
-
-        self.fields['password1'].widget.attrs['class'] = 'form-control'
-        self.fields['password2'].widget.attrs['class'] = 'form-control'
 
 
     def clean_username(self):
@@ -46,7 +41,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 
     def save(self, commit=True):
-        user = super(CustomUserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.username = self.cleaned_data['username']
         user.password = self.cleaned_data.get('password1')
         user.email = self.cleaned_data['email']
@@ -65,6 +60,6 @@ class CustomUserChangeForm(UserChangeForm):
 
 
     def __init__(self, *args, **kwargs):
-        super(CustomUserChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['first_name'].required = False
         
