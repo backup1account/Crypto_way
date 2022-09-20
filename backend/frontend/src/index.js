@@ -6,8 +6,10 @@ import './index.css';
 
 import App from './App';
 import Settings from './routes/Settings';
-import Authorization from './login_page/Auth';
+import Authorization from './Authentication/Auth';
 import PageNotFound from './routes/NotFound';
+
+import PrivateRoute from './Authentication/PrivateRoute';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -21,8 +23,10 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route element={ <PrivateRoute /> }>
+          <Route path="/" element={ <App /> } />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
 
         <Route path="/auth" element={<Authorization />} />
         <Route path="/*" element={<PageNotFound />} />

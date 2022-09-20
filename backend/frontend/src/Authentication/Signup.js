@@ -3,7 +3,15 @@ import axios from "axios";
 
 
 export function SignUp() {
-    const { register, handleSubmit, formState: { errors }, clearErrors, getValues } = useForm({
+
+    const { 
+        register, 
+        handleSubmit,
+        reset,
+        formState: { errors }, 
+        clearErrors, 
+        getValues 
+    } = useForm({
         defaultValues: {
             username: '',
             email: '',
@@ -16,27 +24,33 @@ export function SignUp() {
     const onSubmit = (data) => {
         // clearErrors();
         axios.post("http://localhost:8000/users/register/", {
-            username: data.username,
-            email: data.email,
-            password: data.password
+                username: data.username,
+                email: data.email,
+                password: data.password,
             })
-             .then(res => console.log(res))
+             .then(res => {
+                console.log(res.data.tokens);
+                if (res.data.tokens) {
+                    localStorage.setItem('user', JSON.stringify(res.data));
+                }
+             })
              .catch(err => {
                 if (err.response) {
                     console.log({
                         'error status': err.response.status, 
                         'error headers': err.response.headers 
                     });
-                } 
-                else if (err.request) {
+                } else if (err.request) {
                     console.log(err.request);
-                }
-                else {
+                } else {
                     console.log('Error message: ', err.message);
                 }
                 console.log(err.config);
              });
+
+            reset();
     };
+
 
     return (
         <div className="register-form">
