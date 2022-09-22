@@ -2,8 +2,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 
-export function SignUp() {
-
+export function SignUp(props) {
     const { 
         register, 
         handleSubmit,
@@ -22,22 +21,23 @@ export function SignUp() {
 
 
     const onSubmit = (data) => {
-        // clearErrors();
+        clearErrors();
+
         axios.post("http://localhost:8000/users/register/", {
                 username: data.username,
                 email: data.email,
                 password: data.password,
             })
              .then(res => {
-                console.log(res.data.tokens);
                 if (res.data.tokens) {
                     localStorage.setItem('user', JSON.stringify(res.data));
+                    props.redirection();
                 }
              })
              .catch(err => {
                 if (err.response) {
                     console.log({
-                        'error status': err.response.status, 
+                        'error status': err.response.status,
                         'error headers': err.response.headers 
                     });
                 } else if (err.request) {

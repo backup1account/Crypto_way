@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function App() {
+  const navigate = useNavigate();
+
   const Logout = () => {
     localStorage.removeItem('user');
+    navigate('/auth');
   };
 
   return (

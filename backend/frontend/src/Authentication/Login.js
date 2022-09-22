@@ -2,13 +2,13 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 
-export function LoginUser() {
+export function LoginUser(props) {
     const { 
         register, 
         handleSubmit, 
         reset,
-        formState: { errors }, 
-        getValues 
+        formState: { errors },
+        clearErrors,
     } = useForm({
         defaultValues: {
             username: '',
@@ -16,19 +16,19 @@ export function LoginUser() {
         }
     });
 
-
-
     const onSubmit = (data) => {
-        // clear errors
+        clearErrors();
+
         axios.post("http://localhost:8000/users/obtain-token/", {
                 username: data.username,
                 password: data.password,
             })
              .then(res => {
-                console.log(res);
                 if (res.data) {
                     localStorage.setItem('user', JSON.stringify(res.data));
+                    props.redirection();
                 }
+                
              })
              .catch(err => {
                 if (err.response) {
@@ -46,7 +46,6 @@ export function LoginUser() {
 
             reset();
     };
-
 
     return (
         <div className="login-form">
@@ -67,7 +66,10 @@ export function LoginUser() {
                         message: "Nazwa może składać się z jedynie z liter alfabetu, liczb oraz znaku _"
                     }
                 })} placeholder="Enter your username" />
-                {errors.username && <p>{errors.username.message}</p>}
+
+                <div className="login-errors"> 
+                    {errors.username && <p>{errors.username.message}</p>} 
+                </div>
 
 
                 <label className="login-label">Hasło: </label>
@@ -83,9 +85,15 @@ export function LoginUser() {
                     },
                     validate: value => /\d/.test(value) || "Hasło powinno się składać z co najmniej 1 liczby"
                 })} type="password" placeholder="Enter your password" />
-                {errors.password && <p>{errors.password.message}</p>}
+
+                <div className="login-errors"> 
+                    {errors.password && <p>{errors.password.message}</p>} 
+                </div>
 
                 <button className="login-btn" type="submit"> Zaloguj sie </button>
+                <div className="login-server-error">
+
+                </div>
             </form>
         </div>
     )

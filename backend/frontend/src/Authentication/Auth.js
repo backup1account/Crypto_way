@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { LoginUser } from "./Login";
 import { SignUp } from "./Signup";
@@ -8,12 +9,18 @@ export default function Authorization() {
     const [loginPage, setLoginPage] = useState(true);
     const [registerPage, setRegisterPage] = useState(false);
 
+    const navigate = useNavigate();
 
-    // dodac wyczyszczenie inputow po kliknieciu ktorgos z przyciskow (zmiana z logowania na rejestracje)
+    const redirection = () => {
+        navigate('/');
+    };
+
+
     return (
         <div className="auth">
             <div className="auth-form">
-                { registerPage ? SignUp() : LoginUser() }
+                { registerPage ? <SignUp redirection={redirection} /> 
+                    : <LoginUser redirection={redirection} /> }
             </div>
             <div className="auth-options">
                 <button onClick={() => {
