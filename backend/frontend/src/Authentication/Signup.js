@@ -44,7 +44,7 @@ export function SignUp(props) {
 
                 const error_message = (...attribute) => {
                     let [field, response_type] = attribute;
-                    setError(field, { type: 'custom', message: response_type })
+                    setError(field, { type: 'custom', message: response_type });
                 };
 
                 const PasswordConfirmationErrors = () => {

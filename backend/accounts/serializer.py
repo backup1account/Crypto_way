@@ -1,7 +1,7 @@
 import re
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.core.validators import EmailValidator
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -106,3 +106,78 @@ class RegisterUserSerializer(serializers.Serializer):
         return user
 
 
+
+# based on TokenObtainSerializer class methods
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        authenticate_kwargs = {
+            self.username_field: attrs[self.username_field],
+            'password': attrs['password']
+        }
+
+        try:
+            authenticate_kwargs['request'] = self.context['request']
+        except KeyError:
+            pass
+
+        try:
+            user = CustomUser.objects.get(username=authenticate_kwargs[self.username_field])
+            if not user.is_active:
+                self.error_messages['no_active_account']='Użytkownik jest nieaktywny.'
+                raise exceptions.AuthenticationFailed(
+                    self.error_messages['no_active_account'],
+                    'no_active_account',
+                )
+        except CustomUser.DoesNotExist:
+            self.error_messages['no_active_account']='Użytkownik nie istnieje.'
+            raise exceptions.AuthenticationFailed(
+                self.error_messages['no_active_account'],
+                'no_active_account',
+            )
+
+        self.user = authenticate(**authenticate_kwargs)
+
+        if self.user is None:
+            self.error_messages['no_active_account']='Wprowadzono niepoprawne hasło.'
+            raise exceptions.AuthenticationFailed(
+                self.error_messages['no_active_account'],
+                'no_active_account',
+            )
+
+        return super().validate(attrs)
+
+        
+
+
+
+# def validate(self, attrs):
+#         authenticate_kwargs = {
+#             self.username_field: attrs[self.username_field],
+#             "password": attrs["password"],
+#         }
+#         try:
+#             authenticate_kwargs["request"] = self.context["request"]
+#         except KeyError:
+#             pass
+
+#         self.user = authenticate(**authenticate_kwargs)
+
+#         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
+#             raise exceptions.AuthenticationFailed(
+#                 self.error_messages["no_active_account"],
+#                 "no_active_account",
+#             )
+
+    # def validate(self, attrs):
+    #     data = super().validate(attrs)
+
+    #     refresh = self.get_token(self.user)
+
+    #     data["refresh"] = str(refresh)
+    #     data["access"] = str(refresh.access_token)
+
+    #     if api_settings.UPDATE_LAST_LOGIN:
+    #         update_last_login(None, self.user)
+
+    #     return data

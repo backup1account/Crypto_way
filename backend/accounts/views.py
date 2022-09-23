@@ -1,10 +1,10 @@
-import email
 from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializer import RegisterUserSerializer
+from .serializer import *
 
 
 
@@ -22,4 +22,9 @@ class RegisterUserViewSet(ModelViewSet):
 
     # @action -> change_password, change_username, change_email, change_firstname ?
     # change_image later
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+    queryset = get_user_model().objects.all()
 

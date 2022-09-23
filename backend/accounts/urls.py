@@ -10,6 +10,6 @@ accounts_router.register('register', RegisterUserViewSet, basename='register-use
 urlpatterns = accounts_router.urls
 
 urlpatterns += [
-    path('obtain-token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('obtain-token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh-token/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
