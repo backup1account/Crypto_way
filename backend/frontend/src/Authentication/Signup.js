@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
+// Nazwa użytkownika może składać się z liter alfabetu, liter i znaku podkreślenia _.
+// Nazwa użytkownika może mieć maksymalnie 50 znaków.
+
 
 export function SignUp(props) {
     const { 
@@ -8,16 +11,16 @@ export function SignUp(props) {
         handleSubmit,
         reset,
         formState: { errors }, 
-        clearErrors, 
-        getValues 
+        clearErrors,
+        setError,
     } = useForm({
         defaultValues: {
             username: '',
             email: '',
             password: '',
-            password_confirm: ''
         }
     });
+
 
 
     const onSubmit = (data) => {
@@ -35,6 +38,19 @@ export function SignUp(props) {
                 }
              })
              .catch(err => {
+                console.log(err);
+
+                if (err.response.data.username) {
+                    setError('username', { type: 'custom', message: err.response.data.username });
+                } 
+                if (err.response.data.email) {
+                    setError('email', { type: 'custom', message: err.response.data.email[0] });
+                } 
+                if (err.response.data.password) {
+                    setError('password', { type: 'custom', message: err.response.data.password });
+                }
+
+                // pozniej zakomentowac
                 if (err.response) {
                     console.log({
                         'error status': err.response.status,
@@ -45,7 +61,6 @@ export function SignUp(props) {
                 } else {
                     console.log('Error message: ', err.message);
                 }
-                console.log(err.config);
              });
 
             reset();
@@ -58,63 +73,18 @@ export function SignUp(props) {
             <form onSubmit={ handleSubmit(onSubmit) }>
 
                 <label className="register-label">Nazwa: </label>
-                <input className="register-input" {...register("username", { 
-                    required: {
-                        value: true,
-                        message: "Nie wypełniono pola"
-                    },
-                    maxLength: {
-                        value: 50,
-                        message: "Nazwa powinna składać się z co najwyżej 50 znaków"
-                    },
-                    pattern: {
-                        value: /^[a-zA-Z0-9_]*$/,
-                        message: "Nazwa może składać się z jedynie z liter alfabetu, liczb oraz znaku _"
-                    }
-                })} placeholder="Enter your username" />
+                <input className="register-input" {...register("username")} placeholder="Enter your username" />
                 {errors.username && <p>{errors.username.message}</p>}
 
-
                 <label className="register-label">Email: </label>
-                <input className="register-input" {...register("email", { 
-                    required: {
-                        value: true,
-                        message: "Nie wypełniono pola"
-                    },
-                    pattern: {
-                        value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                        message: "Wprowadzono niepoprawny email"
-                    }
-                })} placeholder="Enter your email" />
+                <input className="register-input" {...register("email")} placeholder="Enter your email" />
                 {errors.email && <p>{errors.email.message}</p>}
 
 
                 <label className="register-label">Hasło: </label>
-                <input className="register-input" {...register("password", { 
-                    required: {
-                        value: true,
-                        message: "Nie wypełniono pola"
-                    },
-                    setValueAs: value => value.toString(),
-                    minLength: {
-                        value: 5,
-                        message: "Hasło powinno się składać z co najmniej 5 znaków"
-                    },
-                    validate: value => /\d/.test(value) || "Hasło powinno się składać z co najmniej 1 liczby"
-                })} type="password" placeholder="Enter your password" />
+                <input className="register-input" {...register("password")} type="password" placeholder="Enter your password" />
                 {errors.password && <p>{errors.password.message}</p>}
 
-
-                <label className="register-label">Powtórz hasło: </label>
-                <input className="register-input" {...register("password_confirm", { 
-                    required: {
-                        value: true,
-                        message: "Wprowadź ponownie hasło"
-                    },
-                    setValueAs: value => value.toString(),
-                    validate: value => value === getValues("password") || "Hasło nie jest takie samo jak wprowadzone wcześniej"
-                })} type="password" placeholder="Confirm your password" />
-                {errors.password_confirm && <p>{errors.password_confirm.message}</p>}
 
                 <button className="register-btn" type="submit"> Zarejestruj sie </button>
 

@@ -31,6 +31,7 @@ export function LoginUser(props) {
                 
              })
              .catch(err => {
+                console.log(err);
                 if (err.response) {
                     console.log({
                         'error status': err.response.status, 
@@ -41,7 +42,7 @@ export function LoginUser(props) {
                 } else {
                     console.log('Error message: ', err.message);
                 }
-                console.log(err.config);
+                // console.log(err.config);
              });
 
             reset();
