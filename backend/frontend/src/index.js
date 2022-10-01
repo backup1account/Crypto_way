@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import { AuthProvider } from "./Authentication/Auth";
+
 import './index.css';
 
 import App from './App';
 import Settings from './routes/Settings';
-import Authorization from './Authentication/Auth';
+import Authorization from './Authentication/AuthPage';
 import PageNotFound from './routes/NotFound';
-
 import PasswordChange from './routes/PasswordChange'; // usunac
-
 import PrivateRoute from './Authentication/PrivateRoute';
 
 import reportWebVitals from './reportWebVitals';
@@ -24,6 +24,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+     <AuthProvider>
       <Routes>
         <Route element={ <PrivateRoute /> }>
           <Route path="/" element={ <App /> } />
@@ -34,6 +35,7 @@ root.render(
         <Route path="/auth" element={<Authorization />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
+     </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

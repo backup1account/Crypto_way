@@ -27,9 +27,9 @@ export function LoginUser(props) {
             })
              .then(res => {
                 if (res.data) {
-                    localStorage.setItem('token', JSON.stringify(res.data[0]));
-                    localStorage.setItem('id', JSON.stringify(res.data[1]));
+                    localStorage.setItem('token', JSON.stringify(res.data));
                     props.redirection();
+                    window.location.reload();
                 }
                 
              })

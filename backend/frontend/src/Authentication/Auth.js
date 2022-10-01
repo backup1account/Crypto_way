@@ -1,38 +1,81 @@
-import { useState } from "react";
+import { useState, createContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { LoginUser } from "./Login";
-import { SignUp } from "./Signup";
+import axios from "axios";
 
 
-export default function Authorization() {
-    const [loginPage, setLoginPage] = useState(true);
-    const [registerPage, setRegisterPage] = useState(false);
+const AuthContext = createContext({});
 
+export default AuthContext;
+
+
+export const AuthProvider = ({children}) => {
     const navigate = useNavigate();
 
-    const redirection = () => {
-        navigate('/');
+    let [tokens, setTokens] = useState(() => (
+        localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : null
+    ));
+
+    let [loading, setLoading] = useState(true);
+
+
+    let updateToken = async () => {
+        console.log('update token called');
+
+        let response = await axios.post('http://localhost:8000/users/refresh-token/', 
+            { 
+                refresh: tokens['refresh'] 
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+        if (response.status === 200) {
+            console.log(response);
+            console.log('refresh token new');
+            setTokens(response.data);
+            localStorage.setItem('token', JSON.stringify(response.data));
+        } else {
+            console.log('something wrong refresh token');
+            logoutUser();
+        }
+
+        if (loading) {
+            setLoading(false);
+        }
     };
 
 
-    return (
-        <div className="auth">
-            <div className="auth-form">
-                { registerPage ? <SignUp redirection={redirection} /> 
-                    : <LoginUser redirection={redirection} /> }
-            </div>
-            <div className="auth-options">
-                <button onClick={() => {
-                    setLoginPage(true); 
-                    setRegisterPage(false);
-                }}> Tu div sie logowanie </button>
-                <button onClick={() => {
-                    setLoginPage(false); 
-                    setRegisterPage(true);
-                }}> Tu div sie zarejestruj </button>
-            </div>
-        </div>
+    let logoutUser = () => {
+        setTokens(null);
+        localStorage.clear();
+        navigate('/auth');
+    };
+
+    let contextData = {
+        logoutUser: logoutUser,
+        updateToken: updateToken,
+    };
+
+    useEffect(() => {
+        let oneDay = 1000 * 60 * 1440;
+        let interval = setInterval(() => {
+            if (tokens) { 
+                updateToken(); 
+            }
+        }, oneDay);
+
+        return () => clearInterval(interval);
+
+    }, [tokens, loading]);
+
+
+    return(
+        <AuthContext.Provider value={contextData}>
+            {children}
+        </AuthContext.Provider>
     )
 
-}
+};
+

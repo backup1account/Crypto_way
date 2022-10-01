@@ -1,4 +1,3 @@
-from curses.ascii import isblank
 import re
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -71,7 +70,7 @@ class CustomUserSerializer(serializers.Serializer):
         access_token = str(tokens.access_token)
         data = {
             'refresh': refresh_token,
-            'access': access_token
+            'access': access_token,
         }
         return data
 
@@ -140,8 +139,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 'no_active_account',
             )
 
-        return [super().validate(attrs), self.user.pk]
-
+        return super().validate(attrs)
 
 
 """

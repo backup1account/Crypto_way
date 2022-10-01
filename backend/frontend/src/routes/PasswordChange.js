@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 // temp
 
@@ -22,8 +23,8 @@ export default function PasswordChange() {
 
 
     const onSubmit = (data) => {
-        const user_id = localStorage.getItem('id');
-        const access_token = JSON.parse(localStorage.getItem('token'));
+        const access_token = JSON.parse(localStorage.getItem('token')).access;
+        const user_id = jwt_decode(access_token).user_id;
 
         clearErrors();
 
@@ -35,7 +36,7 @@ export default function PasswordChange() {
             },
             {
                 headers: {
-                    'authorization': `Bearer ${access_token['access']}`,
+                    'authorization': `Bearer ${access_token}`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
@@ -65,7 +66,6 @@ export default function PasswordChange() {
                 }
 
              });
-
 
             reset();
     };

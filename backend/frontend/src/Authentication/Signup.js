@@ -34,9 +34,9 @@ export function SignUp(props) {
             })
              .then(res => {
                 if (res.data.tokens) {
-                    localStorage.setItem('token', JSON.stringify(res.data[0]));
-                    localStorage.setItem('id', JSON.stringify(res.data[1]));
+                    localStorage.setItem('token', JSON.stringify(res.data));
                     props.redirection();
+                    window.location.reload();
                 }
              })
              .catch(err => {
