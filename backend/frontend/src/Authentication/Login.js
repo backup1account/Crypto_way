@@ -27,7 +27,8 @@ export function LoginUser(props) {
             })
              .then(res => {
                 if (res.data) {
-                    localStorage.setItem('user', JSON.stringify(res.data));
+                    localStorage.setItem('token', JSON.stringify(res.data[0]));
+                    localStorage.setItem('id', JSON.stringify(res.data[1]));
                     props.redirection();
                 }
                 

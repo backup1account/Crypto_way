@@ -34,7 +34,8 @@ export function SignUp(props) {
             })
              .then(res => {
                 if (res.data.tokens) {
-                    localStorage.setItem('user', JSON.stringify(res.data));
+                    localStorage.setItem('token', JSON.stringify(res.data[0]));
+                    localStorage.setItem('id', JSON.stringify(res.data[1]));
                     props.redirection();
                 }
              })
@@ -47,12 +48,7 @@ export function SignUp(props) {
                     setError(field, { type: 'custom', message: response_type });
                 };
 
-                const PasswordConfirmationErrors = () => {
-                    return error_message('password_confirm', response.password_confirm) ? response.password_confirm 
-                        : error_message('password_confirm', response.non_field_errors) ? response.non_field_errors
-                        : {}
-                };
-
+                
                 if (response.username) {
                     error_message('username', response.username);
                 }
@@ -62,8 +58,10 @@ export function SignUp(props) {
                 if (response.password) {
                     error_message('password', response.password);
                 }
+                if (response.password2) {
+                    error_message('password_confirm', response.password2);
+                }
 
-                PasswordConfirmationErrors();
              });
 
             reset();

@@ -9,6 +9,8 @@ import Settings from './routes/Settings';
 import Authorization from './Authentication/Auth';
 import PageNotFound from './routes/NotFound';
 
+import PasswordChange from './routes/PasswordChange'; // usunac
+
 import PrivateRoute from './Authentication/PrivateRoute';
 
 import reportWebVitals from './reportWebVitals';
@@ -26,6 +28,7 @@ root.render(
         <Route element={ <PrivateRoute /> }>
           <Route path="/" element={ <App /> } />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/change-password" element={<PasswordChange />} />
         </Route>
 
         <Route path="/auth" element={<Authorization />} />
