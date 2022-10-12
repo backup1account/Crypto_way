@@ -8,13 +8,13 @@ class CustomPasswordValidator():
 
     def validate(self, value, user=None):
         if len(value) > self.max_length:
-            raise ValidationError(f'Hasło może zawierać maksymalnie ${self.max_length} znaków.')
+            raise ValidationError(f'Hasło może zawierać maksymalnie {self.max_length} znaków.')
         if len(value) < self.min_length:
-            raise ValidationError(f'Hasło musi zawierać co najmniej ${self.min_length} znaków.')
+            raise ValidationError(f'Hasło musi zawierać co najmniej {self.min_length} znaków.')
         if not any(ch.isdigit() for ch in value):
             raise ValidationError('Hasło musi zawierać przynajmniej 1 liczbę.')
 
     def get_help_text(self):
-        return f"Hasło musi zawierać co najmniej ${self.min_length} znaków, w tym jedną liczbę, \
-            może być dłuższe niż na ${self.max_length} znaków."
+        return f"Hasło musi zawierać co najmniej {self.min_length} znaków, w tym jedną liczbę, \
+            ale nie może być dłuższe niż na {self.max_length} znaków."
 

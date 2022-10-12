@@ -5,6 +5,9 @@
 /backend/accounts/__pycache__
 /backend/accounts/migrations
 
+/backend/forum/__pycache__
+/backend/forum/migrations
+
 .DS_Store
 ._.DS_Store
 **/.DS_Store

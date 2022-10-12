@@ -1,15 +1,21 @@
 from django.contrib.auth import get_user_model
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .serializer import *
+
+
+class UserInfoView(RetrieveAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = UserSerializer
 
 
 # @csrf_exempt ?
 class CustomUserRegisterView(CreateAPIView):
     queryset = get_user_model().objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = CustomUserRegisterSerializer
     permission_classes = [AllowAny]
 
 
@@ -23,6 +29,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class CustomUserChangeView(UpdateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = CustomUserChangeSerializer
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticated]
 
 

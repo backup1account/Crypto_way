@@ -7,11 +7,10 @@ import { AuthProvider } from "./Authentication/Auth";
 import './index.css';
 
 import App from './App';
-import Settings from './routes/Settings';
+import SettingsPage from './UserSettings/Settings';
 import Authorization from './Authentication/AuthPage';
 import PageNotFound from './routes/NotFound';
-import PasswordChange from './routes/PasswordChange'; // usunac
-import PrivateRoute from './Authentication/PrivateRoute';
+import { PrivateRoute, RedirectHome } from './Authentication/PrivateRoute';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -28,11 +27,12 @@ root.render(
       <Routes>
         <Route element={ <PrivateRoute /> }>
           <Route path="/" element={ <App /> } />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/change-password" element={<PasswordChange />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
-        <Route path="/auth" element={<Authorization />} />
+        <Route element={ <RedirectHome /> }>
+          <Route path="/auth" element={<Authorization />} />
+        </Route>
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
      </AuthProvider>

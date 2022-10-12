@@ -1,8 +1,19 @@
+import os
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 
 from django.core.validators import RegexValidator
+from django_resized import ResizedImageField
 
+
+def upload_profile_pic(instance, filename):
+    filebase, extension = filename.split('.')
+    img_name = 'profile_pictures/%s.%s' % (instance.pk, extension) # with upper folder
+    full_img_path = os.path.join(settings.MEDIA_ROOT, img_name)
+    if os.path.exists(full_img_path):
+        os.remove(full_img_path)
+    return img_name
 
 
 class CustomUser(AbstractUser):
@@ -12,11 +23,9 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=128, blank=False, null=False)
 
     first_name = models.CharField(max_length=50, null=True, blank=False)
-
-    # avatar = models.ImageField(Default=) -> jak ustawic ten szajs defaultowy a potem opcje zxmienic dodac trzeba
+    image = ResizedImageField(size=[300, 300], default='default.jpg', upload_to=upload_profile_pic)
 
     objects = UserManager()
 
     def __str__(self):
         return self.username
-

@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
 
 // Nazwa użytkownika może składać się z liter alfabetu, liter i znaku podkreślenia _.
 // Nazwa użytkownika może mieć maksymalnie 50 znaków.
@@ -26,43 +25,32 @@ export function SignUp(props) {
     const onSubmit = (data) => {
         clearErrors();
 
-        axios.post("http://localhost:8000/users/register/", {
-                username: data.username,
-                email: data.email,
-                password: data.password,
-                password2: data.password_confirm
-            })
-             .then(res => {
-                if (res.data.tokens) {
-                    localStorage.setItem('token', JSON.stringify(res.data));
-                    props.redirection();
-                    window.location.reload();
-                }
-             })
-             .catch(err => {
-                console.log(err);
-                let response =  err.response.data;
+        props.register(data);
 
-                const error_message = (...attribute) => {
-                    let [field, response_type] = attribute;
-                    setError(field, { type: 'custom', message: response_type });
-                };
+            //  .catch(err => {
+            //     console.log(err);
+            //     let response =  err.response.data;
+
+            //     const error_message = (...attribute) => {
+            //         let [field, response_type] = attribute;
+            //         setError(field, { type: 'custom', message: response_type });
+            //     };
 
                 
-                if (response.username) {
-                    error_message('username', response.username);
-                }
-                if (response.email) {
-                    error_message('email', response.email[0]);
-                }
-                if (response.password) {
-                    error_message('password', response.password);
-                }
-                if (response.password2) {
-                    error_message('password_confirm', response.password2);
-                }
+            //     if (response.username) {
+            //         error_message('username', response.username);
+            //     }
+            //     if (response.email) {
+            //         error_message('email', response.email[0]);
+            //     }
+            //     if (response.password) {
+            //         error_message('password', response.password);
+            //     }
+            //     if (response.password2) {
+            //         error_message('password_confirm', response.password2);
+            //     }
 
-             });
+            //  });
 
             reset();
     };

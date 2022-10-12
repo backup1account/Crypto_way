@@ -11,7 +11,13 @@ from .models import *
 
 
 
-class CustomUserSerializer(serializers.Serializer):
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'first_name', 'image')
+
+
+class CustomUserRegisterSerializer(serializers.Serializer):
 
     username = serializers.CharField(
         max_length=50,
@@ -144,7 +150,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 """
 Serializer for updating user profile. 
-Allows to change username, email, first name, image(to add).
+Allows to change username, email, first name, profile picture.
 """
 class CustomUserChangeSerializer(serializers.Serializer):
 
@@ -174,19 +180,28 @@ class CustomUserChangeSerializer(serializers.Serializer):
         max_length=50,
         required=False, 
         allow_blank=True
-        )
+    )
+
+    image = serializers.ImageField(
+        required=False
+    )
 
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'first_name') # add image
-        optional_fields = ('username', 'email', 'first_name', )
+        fields = ('username', 'email', 'first_name', 'image',)
+        optional_fields = ('username', 'email', 'first_name', 'image', )
 
     def validate_username(self, value):
         pattern = re.compile('^[a-zA-Z0-9_]*$')
         if not pattern.match(value):
             raise serializers.ValidationError('Wprowadzono niepoprawną nazwę użytkownika.')
         return value
+
+    # def validate_first_name(self, value):
+    #     pattern = re.compile('\p{L}')
+    #     if not pattern.match(value):
+
 
 
     def update(self, instance, validated_data):
@@ -203,6 +218,9 @@ class CustomUserChangeSerializer(serializers.Serializer):
         
         if validated_data['first_name']:
             instance.first_name = validated_data.get('first_name', instance.first_name)
+
+        if validated_data.get('image'):
+            instance.image = validated_data.get('image', instance.image)
 
         instance.save()
         return instance

@@ -9,20 +9,21 @@ from django.contrib.auth import get_user_model
 
 
 class CustomUserCreationForm(UserCreationForm):
+
     password2 = forms.CharField(widget=forms.PasswordInput(), error_messages={
         'required': 'Password needs to be confirmed.'
         }, label='Confirm password')
 
-
     class Meta:
         model = CustomUser
         widgets = { 'password': forms.PasswordInput() }
-        fields = ('username', 'email', 'first_name')
+        fields = ('username', 'email', 'first_name', 'image')
 
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].required = False
+        self.fields['image'].required = False
 
 
     def clean_username(self):
@@ -38,6 +39,12 @@ class CustomUserCreationForm(UserCreationForm):
         if duplicate.count():
             raise ValidationError("Email already exists.")
         return email
+
+    # def clean_image(self):
+    #     image = self.cleaned_data.get('image', None)
+    #     if image.height > 480 or image.width > 640:
+    #          raise ValidationError("Nieprawidłowe wymiary obrazu. Maksymalne to 640x480.")
+    #     return image
 
 
     def save(self, commit=True):

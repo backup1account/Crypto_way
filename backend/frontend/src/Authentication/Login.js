@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
+// import axios from "axios";
 
 
 export function LoginUser(props) {
@@ -21,24 +21,14 @@ export function LoginUser(props) {
     const onSubmit = (data) => {
         clearErrors();
 
-        axios.post("http://localhost:8000/users/obtain-token/", {
-                username: data.username,
-                password: data.password,
-            })
-             .then(res => {
-                if (res.data) {
-                    localStorage.setItem('token', JSON.stringify(res.data));
-                    props.redirection();
-                    window.location.reload();
-                }
-                
-             })
-             .catch(err => {
-                console.log(err);
-                if (err.response.data.detail) {
-                    setError('password', { type: 'custom', message: err.response.data.detail });
-                }
-             });
+        props.login(data);
+
+            //  .catch(err => {
+            //     console.log(err);
+            //     if (err.response.data.detail) {
+            //         setError('password', { type: 'custom', message: err.response.data.detail });
+            //     }
+            //  });
 
             reset();
     };
