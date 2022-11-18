@@ -1,4 +1,3 @@
-import re
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model, authenticate
@@ -6,10 +5,9 @@ from django.core.validators import EmailValidator
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+import re
 from .serializer import *
 from .models import *
-
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

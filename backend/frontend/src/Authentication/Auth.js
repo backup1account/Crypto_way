@@ -12,7 +12,6 @@ export default AuthContext;
 export const AuthProvider = ({children}) => {
     const navigate = useNavigate();
 
-
     let [tokens, setTokens] = useState(() => (
         localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : null
     ));
@@ -123,7 +122,8 @@ export const AuthProvider = ({children}) => {
                 new_password: data.new_password,
                 new_password2: data.new_password_confirm
             },
-            { headers: {
+            { 
+                headers: {
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')).access}`,
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -141,13 +141,15 @@ export const AuthProvider = ({children}) => {
 
 
     let changeUser = (data) => {
+        // ZMIENIC PRZESYLANY OBIEKT NA FORMDATA !
         axios.patch(`http://localhost:8000/users/update-user/${localStorage.getItem('user_id')}/`, {
                 username: data.new_username,
                 email: data.new_email,
                 first_name: data.new_first_name,
                 image: data.new_image // ZMIENIC DOZWOLONE FORMATY, PROBLEM Z PRZESLANIEM PLIKU
             },
-            { headers: {
+            { 
+                headers: {
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')).access}`,
                     'Content-Type': 'multipart/form-data'
                 }

@@ -11,7 +11,6 @@ export default function Authorization() {
 
     let { loginUser, registerUser } = useContext(AuthContext);
 
-
     return (
         <div className="auth">
             <div className="auth-form">

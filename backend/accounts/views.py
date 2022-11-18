@@ -19,11 +19,9 @@ class CustomUserRegisterView(CreateAPIView):
     permission_classes = [AllowAny]
 
 
-
 class CustomTokenObtainPairView(TokenObtainPairView):
     queryset = get_user_model().objects.all()
     serializer_class = CustomTokenObtainPairSerializer
-
 
 
 class CustomUserChangeView(UpdateAPIView):
@@ -31,7 +29,6 @@ class CustomUserChangeView(UpdateAPIView):
     serializer_class = CustomUserChangeSerializer
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticated]
-
 
 
 class CustomUserChangePasswordView(UpdateAPIView):

@@ -8,6 +8,7 @@ import './index.css';
 
 import App from './App';
 import SettingsPage from './UserSettings/Settings';
+import ForumPage from './routes/Forum';
 import Authorization from './Authentication/AuthPage';
 import PageNotFound from './routes/NotFound';
 import { PrivateRoute, RedirectHome } from './Authentication/PrivateRoute';
@@ -28,6 +29,7 @@ root.render(
         <Route element={ <PrivateRoute /> }>
           <Route path="/" element={ <App /> } />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/forum" element={<ForumPage />} />
         </Route>
 
         <Route element={ <RedirectHome /> }>

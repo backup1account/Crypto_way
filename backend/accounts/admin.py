@@ -5,7 +5,6 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
 
 
-
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm

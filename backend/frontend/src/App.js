@@ -12,7 +12,7 @@ export default function App() {
     <div className="App">
       <div className="App-links">
         <Link to="/settings">Ustawienia</Link>
-        <Link to="/change-password">Zmien haslo</Link>
+        <Link to="/forum">Forum</Link>
         <Link to="/auth" onClick={logoutUser}>Wyloguj sie</Link>
       </div>
       <div>

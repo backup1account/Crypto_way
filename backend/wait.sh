@@ -9,5 +9,7 @@ done
 # python3 manage.py makemigrations
 # sleep 3
 # python3 manage.py migrate
+# sleep 3
+
 
 python3 manage.py runserver 0.0.0.0:8000

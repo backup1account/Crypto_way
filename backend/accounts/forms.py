@@ -7,9 +7,7 @@ from .models import CustomUser
 from django.contrib.auth import get_user_model
 
 
-
 class CustomUserCreationForm(UserCreationForm):
-
     password2 = forms.CharField(widget=forms.PasswordInput(), error_messages={
         'required': 'Password needs to be confirmed.'
         }, label='Confirm password')
@@ -60,7 +58,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserChangeForm(UserChangeForm):
-
     class Meta:
         model = CustomUser
         fields = '__all__'

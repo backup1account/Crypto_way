@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from .serializer import *
+from .models import Discussion
+
+class DiscussionViewSet(viewsets.ModelViewSet):
+    serializer_class = DiscussionSerializer
+    queryset = Discussion.objects.all()
