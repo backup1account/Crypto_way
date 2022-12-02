@@ -20,6 +20,7 @@ export const AuthProvider = ({children}) => {
         localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
     ));
 
+    let [errorMessages, setErrorMessages] = useState(() => new Array()); // for login & register
 
     let [loading, setLoading] = useState(true);
 
@@ -72,7 +73,6 @@ export const AuthProvider = ({children}) => {
     };
 
 
-
     let registerUser = (data) => {
         axios.post("http://localhost:8000/users/register/", {
                 username: data.username,
@@ -91,7 +91,18 @@ export const AuthProvider = ({children}) => {
                 }
              })
              .catch(err => {
-                console.log(err);
+                let response = err.response.data;
+
+                if (response.username) {
+                    setErrorMessages(errorMessages['username'] = response.username[0]);
+                } if (response.email) {
+                    setErrorMessages(errorMessages['email'] = response.email[0]);
+                } if (response.password) {
+                    setErrorMessages(errorMessages['password'] = response.password[0]);
+                }
+
+                // console.log(errorMessages);
+
              });
     };
 
@@ -177,6 +188,7 @@ export const AuthProvider = ({children}) => {
     let contextData = {
         loginUser: loginUser,
         registerUser: registerUser,
+        errorMessages: errorMessages,
         userInformation: [user, setUser],
         changePassword: changePassword,
         changeUser: changeUser,

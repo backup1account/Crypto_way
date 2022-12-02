@@ -8,6 +8,8 @@
 /backend/forum/__pycache__
 /backend/forum/migrations
 
+# /node_modules
+
 .DS_Store
 ._.DS_Store
 **/.DS_Store

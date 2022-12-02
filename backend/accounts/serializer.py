@@ -6,8 +6,10 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 import re
+from .validators import *
 from .serializer import *
 from .models import *
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,14 +17,18 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'first_name', 'image')
 
 
-class CustomUserRegisterSerializer(serializers.Serializer):
+"""
+Serializer for user registration.
+Allows to set (validate) username, email and password for user.
+"""
+class CustomUserRegisterSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(
         max_length=50,
         required=True,
         allow_blank=False,
         validators=[UniqueValidator(queryset=get_user_model().objects.all(), 
-                            message='Podana nazwa użytkownika już istnieje.')],
+                                    message='Podana nazwa użytkownika już istnieje.')],
         error_messages={
             'blank': 'Pole z nazwą użytkownika nie może być puste ani zawierać spacji.',
             'max_length': 'Nazwa użytkownika może mieć maksymalnie 50 znaków.'
@@ -34,7 +40,7 @@ class CustomUserRegisterSerializer(serializers.Serializer):
         required=True,
         allow_blank=False,
         validators=[EmailValidator(message='Wprowadzono niepoprawny adres e-mail.'),
-                        UniqueValidator(queryset=get_user_model().objects.all(), message='Podany adres e-mail już istnieje.')],
+                    UniqueValidator(queryset=get_user_model().objects.all(), message='Podany adres e-mail już istnieje.')],
         error_messages={
             'blank': 'Pole z adresem e-mail nie może być puste ani zawierać spacji.',
             'max_length': 'Poprawny adres e-mail powinien być krótszy niż 150 znaków.'
@@ -47,18 +53,7 @@ class CustomUserRegisterSerializer(serializers.Serializer):
         allow_blank=False,
         style={'input_type': 'password'},
         error_messages={
-            'blank': 'Pole z hasłem nie może być puste ani zawierać spacji.',
-            'max_length': 'Hasło może zawierać maksymalnie 128 znaków.',
-            'min_length': 'Hasło musi mieć co najmniej 5 znaków.'
-        }
-    )
-
-    password2 = serializers.CharField(
-        write_only=True,
-        style={'input_type': 'password'},
-        label='Confirm password',
-        error_messages={
-            'blank': 'Należy wprowadzić ponownie hasło.',
+            'blank': 'Pole z hasłem nie może być puste ani zawierać spacji.'
         }
     )
 
@@ -66,7 +61,8 @@ class CustomUserRegisterSerializer(serializers.Serializer):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password', 'password2', 'tokens')
+        fields = ('username', 'email', 'password', 'tokens')
+
 
     def get_tokens(self, user):
         tokens = RefreshToken.for_user(user)
@@ -78,7 +74,6 @@ class CustomUserRegisterSerializer(serializers.Serializer):
         }
         return data
 
-
     def validate_username(self, value):
         pattern = re.compile('^[a-zA-Z0-9_]*$')
         if not pattern.match(value):
@@ -86,14 +81,12 @@ class CustomUserRegisterSerializer(serializers.Serializer):
         return value
 
     def validate_password(self, value):
-        if not any(ch.isdigit() for ch in value):
-            raise serializers.ValidationError('Hasło musi zawierać przynajmniej 1 liczbę.')
+        try:
+            v = CustomPasswordValidator()
+            v.validate(value=value)
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError(e)
         return value
-
-    def validate(self, data):
-        if data.get('password') != data.get('password2'):
-            raise serializers.ValidationError({'password2':'Wprowadzono inne hasło niż podane wcześniej.'})
-        return data
 
     def create(self, validated_data):        
         user = CustomUser(
@@ -104,8 +97,11 @@ class CustomUserRegisterSerializer(serializers.Serializer):
         return user
 
 
-
-# based on TokenObtainSerializer class methods
+"""
+Serializer for user authentication.
+Allows user to log in (& obtain new JWT token everytime user logs in).
+Based on TokenObtainSerializer class methods.
+"""
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
@@ -201,7 +197,6 @@ class CustomUserChangeSerializer(serializers.Serializer):
     #     if not pattern.match(value):
 
 
-
     def update(self, instance, validated_data):
         user = self.context['request'].user
 
@@ -210,13 +205,10 @@ class CustomUserChangeSerializer(serializers.Serializer):
 
         if validated_data['username']:
             instance.username = validated_data.get('username', instance.username)
-        
         if validated_data['email']:
             instance.email = validated_data.get('email', instance.email)
-        
         if validated_data['first_name']:
             instance.first_name = validated_data.get('first_name', instance.first_name)
-
         if validated_data.get('image'):
             instance.image = validated_data.get('image', instance.image)
 
@@ -264,7 +256,6 @@ class CustomUserChangePasswordSerializer(serializers.Serializer):
         model = CustomUser
         fields = ('old_password', 'new_password', 'new_password2')
 
-
     def validate_old_password(self, value):
         user = self.context['request'].user
         if not user.check_password(value):
@@ -284,6 +275,4 @@ class CustomUserChangePasswordSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.set_password(validated_data['new_password'])
         instance.save()
-
         return instance
-    

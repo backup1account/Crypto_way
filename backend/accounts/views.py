@@ -12,7 +12,6 @@ class UserInfoView(RetrieveAPIView):
     serializer_class = UserSerializer
 
 
-# @csrf_exempt ?
 class CustomUserRegisterView(CreateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = CustomUserRegisterSerializer
@@ -35,4 +34,3 @@ class CustomUserChangePasswordView(UpdateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = CustomUserChangePasswordSerializer
     permission_classes = [IsAuthenticated]
-

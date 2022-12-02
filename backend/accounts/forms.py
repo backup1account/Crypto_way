@@ -8,9 +8,6 @@ from django.contrib.auth import get_user_model
 
 
 class CustomUserCreationForm(UserCreationForm):
-    password2 = forms.CharField(widget=forms.PasswordInput(), error_messages={
-        'required': 'Password needs to be confirmed.'
-        }, label='Confirm password')
 
     class Meta:
         model = CustomUser
@@ -28,14 +25,14 @@ class CustomUserCreationForm(UserCreationForm):
         username = self.cleaned_data['username']
         duplicate = get_user_model().objects.filter(username=username)
         if duplicate.count():
-            raise ValidationError("Username already exists.")
+            raise ValidationError("Nazwa użytkownika już istnieje.")
         return username
 
     def clean_email(self):
         email = self.cleaned_data['email']
         duplicate = get_user_model().objects.filter(email=email)
         if duplicate.count():
-            raise ValidationError("Email already exists.")
+            raise ValidationError("Email już istnieje.")
         return email
 
     # def clean_image(self):
@@ -61,7 +58,6 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = '__all__'
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

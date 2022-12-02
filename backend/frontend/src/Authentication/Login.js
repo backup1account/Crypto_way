@@ -1,19 +1,23 @@
+import * as Mui from '@mui/material';
+
 import { useForm } from "react-hook-form";
-// import axios from "axios";
+
+import PersonIcon from '@mui/icons-material/Person';
+import KeyIcon from '@mui/icons-material/Key';
+
+import './LoginRegister.css';
 
 
 export function LoginUser(props) {
     const { 
-        register, 
-        handleSubmit, 
+        register,
+        handleSubmit,
         reset,
-        formState: { errors },
-        setError,
         clearErrors,
     } = useForm({
         defaultValues: {
             username: '',
-            password: '',
+            password: ''
         }
     });
 
@@ -22,32 +26,50 @@ export function LoginUser(props) {
         clearErrors();
 
         props.login(data);
-
-            //  .catch(err => {
-            //     console.log(err);
-            //     if (err.response.data.detail) {
-            //         setError('password', { type: 'custom', message: err.response.data.detail });
-            //     }
-            //  });
-
-            reset();
+        reset();
     };
 
     return (
-        <div className="login-form">
-            <h1>Logowanie</h1>
-            <form onSubmit={ handleSubmit(onSubmit) }>
+        <Mui.Grid container
+            width="80%"
+            height="58%"
+            margin="10% 11%"
+            justifyContent="center"
+            alignItems="center"
+            >
+            <Mui.Grid 
+                item 
+                className="field" 
+                margin="12% auto" 
+                justifyContent="center"
+                fontSize="15px"
+                >
+                <h1>Logowanie</h1>
+            </Mui.Grid>
 
-                <label className="login-label">Nazwa: </label>
-                <input className="login-input" {...register("username")} placeholder="Enter your username" />
+            <form onSubmit={ handleSubmit(onSubmit) }
+                style={({ 
+                    'height': '68%',
+                    'display': 'grid'
+                })}
+                >
 
-                <label className="login-label">Hasło: </label>
-                <input className="login-input" {...register("password")} type="password" placeholder="Enter your password" />
-                {errors.password && <p>{errors.password.message}</p>} 
+                <Mui.Grid item className="field">
+                    <input type="text" required {...register("username")} />
+                    <PersonIcon className="field-icon" />
+                    <label>Nazwa użytkownika</label>
+                </Mui.Grid>
+                <Mui.Grid item className="field">
+                    <input type="password" required {...register("password")} />
+                    <KeyIcon className="field-icon" />
+                    <label>Hasło</label>
+                </Mui.Grid>
 
-                <button className="login-btn" type="submit"> Zaloguj sie </button>
+                <Mui.Grid item className="field">
+                    <button className="button" type="submit">Zaloguj się</button>
+                </Mui.Grid>
                 
             </form>
-        </div>
+        </Mui.Grid>
     )
 }

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 class Discussion(models.Model):
     id = models.BigAutoField(primary_key=True)
-    author = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     topic = models.CharField(max_length=50, blank=False, null=False)
     description = models.CharField(max_length=1000, blank=True)
     likes = models.IntegerField(default=0)
@@ -16,7 +16,7 @@ class Discussion(models.Model):
     # tags = models.CharField()
     # comments int ?
 
-    # CHANGE LATER TO 8080 !
+    # TODO: CHANGE LATER TO 8080 !
     @classmethod
     def set_discussion_link(cls, pk):
         discussion_link = 'http://localhost:3000/forum/post-%s' % (pk)

@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 
 
-class CustomPasswordValidator():
+class CustomPasswordValidator(object):
     def __init__(self, max_length=128, min_length=5):
         self.max_length = max_length
         self.min_length = min_length
@@ -17,4 +17,3 @@ class CustomPasswordValidator():
     def get_help_text(self):
         return f"Hasło musi zawierać co najmniej {self.min_length} znaków, w tym jedną liczbę, \
             ale nie może być dłuższe niż na {self.max_length} znaków."
-

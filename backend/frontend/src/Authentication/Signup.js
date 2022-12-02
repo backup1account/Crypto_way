@@ -1,4 +1,10 @@
+import * as Mui from '@mui/material';
+
 import { useForm } from "react-hook-form";
+
+import PersonIcon from '@mui/icons-material/Person';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import KeyIcon from '@mui/icons-material/Key';
 
 // Nazwa użytkownika może składać się z liter alfabetu, liter i znaku podkreślenia _.
 // Nazwa użytkownika może mieć maksymalnie 50 znaków.
@@ -9,15 +15,12 @@ export function SignUp(props) {
         register, 
         handleSubmit,
         reset,
-        formState: { errors }, 
         clearErrors,
-        setError,
     } = useForm({
         defaultValues: {
             username: '',
             email: '',
-            password: '',
-            password_confirm: ''
+            password: ''
         }
     });
 
@@ -26,62 +29,55 @@ export function SignUp(props) {
         clearErrors();
 
         props.register(data);
-
-            //  .catch(err => {
-            //     console.log(err);
-            //     let response =  err.response.data;
-
-            //     const error_message = (...attribute) => {
-            //         let [field, response_type] = attribute;
-            //         setError(field, { type: 'custom', message: response_type });
-            //     };
-
-                
-            //     if (response.username) {
-            //         error_message('username', response.username);
-            //     }
-            //     if (response.email) {
-            //         error_message('email', response.email[0]);
-            //     }
-            //     if (response.password) {
-            //         error_message('password', response.password);
-            //     }
-            //     if (response.password2) {
-            //         error_message('password_confirm', response.password2);
-            //     }
-
-            //  });
-
-            reset();
+        reset();
     };
 
 
     return (
-        <div className="register-form">
-            <h1>Rejestracja</h1>
-            <form onSubmit={ handleSubmit(onSubmit) }>
+        <Mui.Grid container
+            width="80%"
+            height="71%"
+            margin="3% 11%"
+            justifyContent="center"
+            alignItems="center"
+            >
+            <Mui.Grid
+                item
+                className="field"
+                margin="11% auto" 
+                justifyContent="center"
+                fontSize="15px"
+                >
+                    <h1>Rejestracja</h1>
+            </Mui.Grid>
 
-                <label className="register-label">Nazwa: </label>
-                <input className="register-input" {...register("username")} placeholder="Enter your username" />
-                {errors.username && <p>{errors.username.message}</p>}
+            <form onSubmit={ handleSubmit(onSubmit) }
+                style={({ 
+                    'height': '69%',
+                    'display': 'grid'
+                })}
+                >
+                <Mui.Grid item className="field">
+                    <input type="text" required {...register("username")} />
+                    <PersonIcon className="field-icon" />
+                    <label>Nazwa użytkownika</label>
+                </Mui.Grid>
+                <Mui.Grid item className="field">
+                    <input type="text" required {...register("email")} />
+                    <MailOutlineIcon className="field-icon"/>
+                    <label>E-mail</label>
+                </Mui.Grid>
+                <Mui.Grid item className="field">
+                    <input type="password" required {...register("password")} />
+                    <KeyIcon className="field-icon" />
+                    <label>Hasło</label>
+                </Mui.Grid>
 
-                <label className="register-label">Email: </label>
-                <input className="register-input" {...register("email")} placeholder="Enter your email" />
-                {errors.email && <p>{errors.email.message}</p>}
-
-
-                <label className="register-label">Hasło: </label>
-                <input className="register-input" {...register("password")} type="password" placeholder="Enter your password" />
-                {errors.password && <p>{errors.password.message}</p>}
-
-                <label className="register-label">Powtórz hasło: </label>
-                <input className="register-input" {...register("password_confirm")} type="password" placeholder="Enter your password" />
-                {errors.password_confirm && <p>{errors.password_confirm.message}</p>}
-
-
-                <button className="register-btn" type="submit"> Zarejestruj sie </button>
+                <Mui.Grid item className="field">
+                    <button className="button" type="submit">Zarejestruj się</button>
+                </Mui.Grid>
 
             </form>
-        </div>
+        </Mui.Grid>
     )
 };

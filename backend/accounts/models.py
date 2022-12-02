@@ -6,7 +6,9 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import RegexValidator
 from django_resized import ResizedImageField
 
+from .validators import CustomPasswordValidator
 
+# CHANGE TO CLASSMETHOD
 def upload_profile_pic(instance, filename):
     filebase, extension = filename.split('.')
     img_name = 'profile_pictures/%s.%s' % (instance.pk, extension) # with upper folder
@@ -20,7 +22,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=50, unique=True, blank=False, null=False, 
             validators=[RegexValidator('^[a-zA-Z0-9_]*$', "Username can only contain alphanumeric characters and _.")])
     email = models.EmailField(max_length=150, unique=True, null=False, blank=False)
-    password = models.CharField(max_length=128, blank=False, null=False)
+    password = models.CharField(max_length=128, blank=False, null=False, validators=[CustomPasswordValidator])
 
     first_name = models.CharField(max_length=50, null=True, blank=False)
     image = ResizedImageField(size=[300, 300], default='default.jpg', upload_to=upload_profile_pic)
