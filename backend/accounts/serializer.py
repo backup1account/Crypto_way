@@ -62,7 +62,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password', 'tokens')
-
+        
 
     def get_tokens(self, user):
         tokens = RefreshToken.for_user(user)

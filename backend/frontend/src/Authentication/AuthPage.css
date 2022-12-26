@@ -1,25 +1,10 @@
 .BoxWrapper {
     width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
 }
 
 .BoxWrapper > .UserActionContainer {
-    width: 55%;
-    height: 70vh;
-    margin: 0 auto;
-    border-radius: 42px;
-    background-color: #070730;
-    box-shadow:  25px 25px 25px #00000053,
-                -20px -18px 15px #2f2f9512;
-}
-
-.field {
-    height: 52px;
-    padding: 1% 0;
-    display: flex;
-    position: relative;
-    color: #ffffffb5; /* field divs font color (light grey) */
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
 }

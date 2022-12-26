@@ -8,7 +8,6 @@ const AuthContext = createContext({});
 
 export default AuthContext;
 
-
 export const AuthProvider = ({children}) => {
     const navigate = useNavigate();
 
@@ -37,12 +36,11 @@ export const AuthProvider = ({children}) => {
             });
 
         if (response.status === 200) {
-            // console.log(response);
-            console.log('refresh token successfully');
+            console.log('Refresh token obtained successfully');
             setTokens(response.data);
             localStorage.setItem('token', JSON.stringify(response.data));
         } else {
-            console.log('something wrong with refresh token');
+            console.log('Something went wrong with refresh token');
             logoutUser();
         }
 
@@ -78,7 +76,6 @@ export const AuthProvider = ({children}) => {
                 username: data.username,
                 email: data.email,
                 password: data.password,
-                password2: data.password_confirm
             })
              .then(res => {
                 console.log(res)
@@ -100,9 +97,6 @@ export const AuthProvider = ({children}) => {
                 } if (response.password) {
                     setErrorMessages(errorMessages['password'] = response.password[0]);
                 }
-
-                // console.log(errorMessages);
-
              });
     };
 
@@ -122,7 +116,14 @@ export const AuthProvider = ({children}) => {
                 getUser(jwt_decode(access_token).user_id, access_token);
             }
         })
-        .catch(err => console.log(err)); // push errors to dictionary
+        .catch(err => console.log(err));
+
+        // clear email error messages
+        // if (response.username) {
+        //     setErrorMessages(errorMessages['username'] = response.username[0]);
+        // } if (response.password) {
+        //     setErrorMessages(errorMessages['password'] = response.password[0]);
+        // }
     };
 
 

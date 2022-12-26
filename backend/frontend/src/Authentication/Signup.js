@@ -6,6 +6,11 @@ import PersonIcon from '@mui/icons-material/Person';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import KeyIcon from '@mui/icons-material/Key';
 
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { blue } from '@mui/material/colors';
+import { useContext } from 'react';
+import AuthContext from './Auth';
+
 // Nazwa użytkownika może składać się z liter alfabetu, liter i znaku podkreślenia _.
 // Nazwa użytkownika może mieć maksymalnie 50 znaków.
 
@@ -24,57 +29,96 @@ export function SignUp(props) {
         }
     });
 
+    let { errorMessages } = useContext(AuthContext);
+
 
     const onSubmit = (data) => {
         clearErrors();
 
         props.register(data);
+        console.log(errorMessages);
+        
         reset();
     };
 
 
     return (
         <Mui.Grid container
-            width="80%"
-            height="71%"
-            margin="3% 11%"
-            justifyContent="center"
-            alignItems="center"
+            sx={{ 
+                width: '100%', 
+                height: '60%',
+                display: 'flex',
+                flexDirection: 'column',
+                textAlign: 'center',
+                alignItems: 'center',
+                mt: 20,
+                paddingY: 5,
+            }}
             >
-            <Mui.Grid
-                item
-                className="field"
-                margin="11% auto" 
-                justifyContent="center"
-                fontSize="15px"
-                >
-                    <h1>Rejestracja</h1>
+
+            <Mui.Grid item sx={{ pb: 8 }}>
+                <Mui.Avatar sx={{ mb: 2, ml: 4, bgcolor: blue[400] }}>
+                    <LockOutlinedIcon />
+                </Mui.Avatar>
+                <Mui.Typography component="h1" variant="h5" color="#444444">
+                    Rejestracja
+                </Mui.Typography>
             </Mui.Grid>
 
-            <form onSubmit={ handleSubmit(onSubmit) }
-                style={({ 
-                    'height': '69%',
-                    'display': 'grid'
-                })}
-                >
-                <Mui.Grid item className="field">
-                    <input type="text" required {...register("username")} />
-                    <PersonIcon className="field-icon" />
-                    <label>Nazwa użytkownika</label>
+            <form onSubmit={ handleSubmit(onSubmit) }>
+
+                <Mui.Grid item sx={{ pb: 4 }}>
+                    <Mui.FormControl sx={{ width: '26ch' }}>
+                            <Mui.TextField
+                                {...register("username")}
+                                id="outlined-required1-signup"
+                                label="Nazwa użytkownika"
+                                InputProps={{
+                                    startAdornment: (
+                                        <Mui.InputAdornment position="start" sx={{ paddingLeft: 0.5 }}>
+                                            <PersonIcon />
+                                        </Mui.InputAdornment>
+                                    ),
+                                }}
+                                />
+                        </Mui.FormControl>
                 </Mui.Grid>
-                <Mui.Grid item className="field">
-                    <input type="text" required {...register("email")} />
-                    <MailOutlineIcon className="field-icon"/>
-                    <label>E-mail</label>
+                <Mui.Grid item sx={{ pb: 1 }}>
+                    <Mui.FormControl sx={{ width: '26ch' }}>
+                        <Mui.TextField
+                            {...register("email")}
+                            id="outlined-required2-signup"
+                            label="E-mail"
+                            InputProps={{
+                                startAdornment: (
+                                    <Mui.InputAdornment position="start" sx={{ paddingLeft: 0.5 }}>
+                                        <MailOutlineIcon />
+                                    </Mui.InputAdornment>
+                                ),
+                            }}
+                            />
+                    </Mui.FormControl>
                 </Mui.Grid>
-                <Mui.Grid item className="field">
-                    <input type="password" required {...register("password")} />
-                    <KeyIcon className="field-icon" />
-                    <label>Hasło</label>
+                <Mui.Grid item sx={{ pt: 3 }}>
+                    <Mui.FormControl sx={{ width: '26ch' }}>
+                        <Mui.TextField
+                            {...register("password")}
+                            id="outlined-required3-signup"
+                            type="password"
+                            label="Hasło"
+                            InputProps={{
+                                startAdornment: (
+                                    <Mui.InputAdornment position="start" sx={{ paddingLeft: 0.5 }}>
+                                        <KeyIcon />
+                                    </Mui.InputAdornment>
+                                ),
+                            }}
+                            />
+                        </Mui.FormControl>
                 </Mui.Grid>
 
-                <Mui.Grid item className="field">
-                    <button className="button" type="submit">Zarejestruj się</button>
+                <Mui.Grid item sx={{ pt: 5 }}>
+                    <Mui.Button variant="outlined" type="submit" sx={{ width: '23ch', height: '6ch' }}>Zarejestruj się</Mui.Button>
                 </Mui.Grid>
 
             </form>
