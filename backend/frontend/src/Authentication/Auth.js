@@ -1,7 +1,6 @@
 import { useState, createContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
 
 const AuthContext = createContext({});
@@ -19,14 +18,10 @@ export const AuthProvider = ({children}) => {
         localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
     ));
 
-    let [errorMessages, setErrorMessages] = useState(() => new Array()); // for login & register
-
     let [loading, setLoading] = useState(true);
 
 
     let updateToken = async () => {
-        console.log('update token called');
-
         let response = await axios.post('http://localhost:8000/users/refresh-token/', { 
                 refresh: tokens['refresh'] 
             }, 
@@ -69,63 +64,6 @@ export const AuthProvider = ({children}) => {
         })
         .catch(err => console.log(err))
     };
-
-
-    let registerUser = (data) => {
-        axios.post("http://localhost:8000/users/register/", {
-                username: data.username,
-                email: data.email,
-                password: data.password,
-            })
-             .then(res => {
-                console.log(res)
-                if (res.data.tokens) {
-                    localStorage.setItem('token', JSON.stringify(res.data.tokens));
-                    let access_token = JSON.parse(localStorage.getItem('token')).access;
-
-                    localStorage.setItem('user_id', jwt_decode(access_token).user_id);
-                    getUser(jwt_decode(access_token).user_id, access_token);
-                }
-             })
-             .catch(err => {
-                let response = err.response.data;
-
-                if (response.username) {
-                    setErrorMessages(errorMessages['username'] = response.username[0]);
-                } if (response.email) {
-                    setErrorMessages(errorMessages['email'] = response.email[0]);
-                } if (response.password) {
-                    setErrorMessages(errorMessages['password'] = response.password[0]);
-                }
-             });
-    };
-
-
-
-    let loginUser = (data) => {
-        axios.post("http://localhost:8000/users/obtain-token/", {
-            username: data.username,
-            password: data.password,
-        })
-        .then(res => {
-            if (res.data) {
-                localStorage.setItem('token', JSON.stringify(res.data));
-                let access_token = JSON.parse(localStorage.getItem('token')).access;
-
-                localStorage.setItem('user_id', jwt_decode(access_token).user_id);
-                getUser(jwt_decode(access_token).user_id, access_token);
-            }
-        })
-        .catch(err => console.log(err));
-
-        // clear email error messages
-        // if (response.username) {
-        //     setErrorMessages(errorMessages['username'] = response.username[0]);
-        // } if (response.password) {
-        //     setErrorMessages(errorMessages['password'] = response.password[0]);
-        // }
-    };
-
 
 
     let changePassword = (data) => {
@@ -187,13 +125,10 @@ export const AuthProvider = ({children}) => {
 
 
     let contextData = {
-        loginUser: loginUser,
-        registerUser: registerUser,
-        errorMessages: errorMessages,
         userInformation: [user, setUser],
         changePassword: changePassword,
         changeUser: changeUser,
-        getUser: getUser, // ?
+        getUser: getUser,
         logoutUser: logoutUser,
         updateToken: updateToken,
     };

@@ -1,21 +1,17 @@
-import * as Mui from '@mui/material';
-
 import { useContext, useState } from "react";
 import AuthContext from "./Auth";
 
 import { LoginUser } from "./Login";
 import { SignUp } from "./Signup";
 
-import { Button, FormHelperText } from '@mui/material';
-
-import './AuthPage.css';
+import { Button, FormHelperText, Box, Grid } from '@mui/material';
 
 
 export default function Authorization() {
     const [loginPage, setLoginPage] = useState(true);
     const [registerPage, setRegisterPage] = useState(false);
 
-    let { loginUser, registerUser, errorMessages } = useContext(AuthContext);
+    let { getUser } = useContext(AuthContext);
 
     let checkTextHelper = () => {
         let helperText = '';
@@ -54,25 +50,25 @@ export default function Authorization() {
 
 
     return (
-        <Mui.Box className="BoxWrapper">
-            <Mui.Grid container className="UserActionContainer">
-                <Mui.Grid item>
+        <Box className="BoxWrapper" sx={{ width: '100%', height: '100%' }}>
+            <Grid container className="UserActionContainer" sx={{ width: '100%', height: '100%', justifyContent: 'center' }}>
+                <Grid item>
 
-                    <Mui.Grid item>
-                        { registerPage ? <SignUp register={registerUser} />
-                            : <LoginUser login={loginUser} /> }
-                    </Mui.Grid>
+                    <Grid item>
+                        { registerPage ? <SignUp info={getUser} />
+                            : <LoginUser info={getUser} /> }
+                    </Grid>
                 
-                    <Mui.Grid 
+                    <Grid 
                         item
                         alignItems="center" 
                         fontSize="13px"
                         >
                             {checkTextHelper()}
-                    </Mui.Grid>
+                    </Grid>
 
-                </Mui.Grid>
-            </Mui.Grid>
-        </Mui.Box>
+                </Grid>
+            </Grid>
+        </Box>
     )
 }

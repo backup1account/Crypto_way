@@ -22,7 +22,6 @@ Serializer for user registration.
 Allows to set (validate) username, email and password for user.
 """
 class CustomUserRegisterSerializer(serializers.ModelSerializer):
-
     username = serializers.CharField(
         max_length=50,
         required=True,
@@ -30,7 +29,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=get_user_model().objects.all(), 
                                     message='Podana nazwa użytkownika już istnieje.')],
         error_messages={
-            'blank': 'Pole z nazwą użytkownika nie może być puste ani zawierać spacji.',
+            'blank': 'Pole nie może być puste.',
             'max_length': 'Nazwa użytkownika może mieć maksymalnie 50 znaków.'
         }
     )
@@ -42,7 +41,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
         validators=[EmailValidator(message='Wprowadzono niepoprawny adres e-mail.'),
                     UniqueValidator(queryset=get_user_model().objects.all(), message='Podany adres e-mail już istnieje.')],
         error_messages={
-            'blank': 'Pole z adresem e-mail nie może być puste ani zawierać spacji.',
+            'blank': 'Pole nie może być puste.',
             'max_length': 'Poprawny adres e-mail powinien być krótszy niż 150 znaków.'
         }
     )
@@ -53,7 +52,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
         allow_blank=False,
         style={'input_type': 'password'},
         error_messages={
-            'blank': 'Pole z hasłem nie może być puste ani zawierać spacji.'
+            'blank': 'Pole nie może być puste.'
         }
     )
 
@@ -75,7 +74,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
         return data
 
     def validate_username(self, value):
-        pattern = re.compile('^[a-zA-Z0-9_]*$')
+        pattern = re.compile('[a-zA-Z]')
         if not pattern.match(value):
             raise serializers.ValidationError('Wprowadzono niepoprawną nazwę użytkownika.')
         return value
@@ -103,7 +102,6 @@ Allows user to log in (& obtain new JWT token everytime user logs in).
 Based on TokenObtainSerializer class methods.
 """
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-
     def validate(self, attrs):
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
