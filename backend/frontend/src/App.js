@@ -1,8 +1,10 @@
 import LandingPage from "./routes/Landing";
+import ForumPage from "./routes/Forum";
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import LeftNavbar from "./Navbar";
+import { Grid } from "@mui/material";
 
 const darkTheme = createTheme({
   palette: {
@@ -16,15 +18,20 @@ export default function App() {
     <ThemeProvider theme={darkTheme}>
     <CssBaseline />
 
-      <div className="App">
-        <div >
+      <Grid container className="App" sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'row'
+        }}
+        >
+        <Grid item sx={{ width: '15%', height: '100%' }}>
           <LeftNavbar />
-        </div>
-
-        {/* <div>
-        <LandingPage />
-        </div> */}
-      </div>
+        </Grid>
+        <Grid item sx={{ pl: 5, width: '85%', height: '100%' }}>
+          <ForumPage />
+        </Grid>
+      </Grid>
 
     </ThemeProvider>
   );

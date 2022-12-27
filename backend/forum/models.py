@@ -13,16 +13,21 @@ class Discussion(models.Model):
     likes = models.IntegerField(default=0)
     link = models.URLField(max_length=100)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
-    # tags = models.CharField()
+    # tags = models.CharField(max_length=200, blank=True)
     # comments int ?
 
-    # TODO: CHANGE LATER TO 8080 !
+    # TODO: CHANGE LATER TO 8000 !
     @classmethod
-    def set_discussion_link(cls, pk):
+    def set_discussion_link(cls, pk): #instance.id
         discussion_link = 'http://localhost:3000/forum/post-%s' % (pk)
+
         if Discussion.objects.filter(link=discussion_link):
-            # change to update
-            raise ValidationError("Discussion already exists")
+            found_record = Discussion.objects.get(link=discussion_link)
+            previous_record = Discussion.objects.get(id=pk)
+
+            if found_record.author != previous_record.author:
+                raise ValidationError("Discussion already exists")
+
         return discussion_link
 
     def __str__(self):

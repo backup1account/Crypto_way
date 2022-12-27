@@ -6,9 +6,9 @@ while ! nc -z cryptodb 3306; do
 done
 
 
-# python3 manage.py makemigrations accounts
+# python3 manage.py makemigrations forum
 # sleep 3
-# python3 manage.py migrate accounts
+# python3 manage.py migrate forum
 # sleep 3
 
 python3 manage.py runserver 0.0.0.0:8000
